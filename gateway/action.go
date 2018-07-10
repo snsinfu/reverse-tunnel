@@ -4,19 +4,18 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gorilla/websocket"
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 )
 
-// mount adds application routes to echo instance.
-func mount(e *echo.Echo) {
+// Mount adds application routes to echo instance.
+func Mount(e *echo.Echo) {
 	e.GET("/tcp/:port", GetTCPPort)
 	e.GET("/udp/:port", GetUDPPort)
 	e.GET("/session/:id", GetSession)
 }
 
-// GetTCPPort handles /tcp/:port request.
+// GetTCPPort handles /tcp/:port request. It starts listening on specified TCP
+// port and notifies client connections to the requester via WebSocket.
 func GetTCPPort(c echo.Context) error {
 	port, err := parsePort(c.Param("port"))
 	if err != nil {
@@ -28,45 +27,46 @@ func GetTCPPort(c echo.Context) error {
 		return err
 	}
 
-	if err := checkAccess(key, "tcp4", port); err != nil {
-		return err
-	}
-
-	addr, err := net.ResolveTCPAddr("tcp4", ":"+strconv.Itoa(port))
+	agent, err := NewTCPAgent(port, key)
 	if err != nil {
 		return err
 	}
 
-	return WebSocket(func(ws *websocket.Conn) error {
-		ln, err := net.ListenTCP("tcp4", addr)
-		if err != nil {
-			return err
-		}
-		defer ln.Close()
-	})
+	return WebSocket(c, agent.Start)
 }
 
-// GetUDPPort handles /udp/:port request.
+// GetUDPPort handles /udp/:port request. It starts listening on specified UDP
+// port and notifies client connections to the requester via WebSocket.
 func GetUDPPort(c echo.Context) error {
+	port, err := parsePort(c.Param("port"))
+	if err != nil {
+		return err
+	}
+
+	key, err := extractAuthKey(c)
+	if err != nil {
+		return err
+	}
+
+	agent, err := NewUDPAgent(port, key)
+	if err != nil {
+		return err
+	}
+
+	return WebSocket(c, agent.Start)
 }
 
-// extractAuthKey extracts Bearer authorization key from request header.
-func extractAuthKey(c echo.Context) (string, error) {
-	const (
-		authHeader = "Authorization"
-		authScheme = "Bearer "
-	)
+// GetSession handles /session/:id request. It starts tunneling TCP/UDP packets
+// to the requester via WebSocket.
+func GetSession(c echo.Context) error {
+	id := c.Param("id")
 
-	auth, ok := c.Request().Header[authHeader]
-	if !ok {
-		return "", ErrMissingKey
+	sess, err := AcquireSession(id)
+	if err != nil {
+		return err
 	}
 
-	if !strings.HasPrefix(auth, authScheme) {
-		return "", ErrInvalidKey
-	}
-
-	return strings.TrimPrefix(auth, authScheme), nil
+	return WebSocket(c, sess.Start)
 }
 
 // parsePort parses string as a port number, which must be between 1 and 65535.
@@ -86,4 +86,23 @@ func parsePort(s string) (int, error) {
 	}
 
 	return port, nil
+}
+
+// extractAuthKey extracts Bearer authorization key from request header.
+func extractAuthKey(c echo.Context) (string, error) {
+	const (
+		authHeader = "Authorization"
+		authScheme = "Bearer "
+	)
+
+	auth := c.Request().Header.Get(authHeader)
+	if auth == "" {
+		return "", ErrMissingKey
+	}
+
+	if !strings.HasPrefix(auth, authScheme) {
+		return "", ErrInvalidKey
+	}
+
+	return strings.TrimPrefix(auth, authScheme), nil
 }

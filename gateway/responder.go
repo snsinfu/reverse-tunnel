@@ -15,7 +15,7 @@ const (
 func WebSocket(c echo.Context, handler func(*websocket.Conn) error) error {
 	upgrader := websocket.Upgrader{}
 
-	ws, err := upgrader.Upgrade(c.Request(), c.Response(), nil)
+	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return Error(c, err)
 	}
