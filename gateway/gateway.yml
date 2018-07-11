@@ -1,0 +1,11 @@
+control_address: 127.0.0.1:9000
+
+agents:
+  - auth_key: 616ed442054316a629934bec96cac370c0f72fda078441cd27a647f27301a270
+    ports: [10022/tcp, 10022/udp, 10023/udp]
+
+  - auth_key: 9825e97f637685e4c41f49579ab8a6232f18bec4a401c9de432849c9bbe433fe
+    ports: [11022/tcp, 11022/udp, 11023/udp]
+
+  - auth_key: d78d25ae5a3ccc85f183d81c17a8d810c9907d319cf3b2c77d33ba72716dafb7
+    ports: [12022/tcp, 12022/udp, 12023/udp]
