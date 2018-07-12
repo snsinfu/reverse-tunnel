@@ -1,0 +1,9 @@
+gateway_url: ws://localhost:9000
+auth_key: 616ed442054316a629934bec96cac370c0f72fda078441cd27a647f27301a270
+
+forwards:
+  - port: 10022/tcp
+    destination: 192.168.100.163:22
+
+  - port: 10022/udp
+    destination: 192.168.100.163:10022
