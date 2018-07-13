@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"github.com/gorilla/websocket"
+	"github.com/snsinfu/reverse-tunnel/config"
 	"github.com/snsinfu/reverse-tunnel/taskch"
 )
 
@@ -25,7 +26,7 @@ func (sess *Session) Start(ws *websocket.Conn) error {
 
 	// Uplink
 	tasks.Go(func() error {
-		buf := make([]byte, bufferSize)
+		buf := make([]byte, config.BufferSize)
 
 		for {
 			n, err := sess.conn.Read(buf)
@@ -41,7 +42,7 @@ func (sess *Session) Start(ws *websocket.Conn) error {
 
 	// Downlink
 	tasks.Go(func() error {
-		buf := make([]byte, bufferSize)
+		buf := make([]byte, config.BufferSize)
 
 		for {
 			_, r, err := ws.NextReader()

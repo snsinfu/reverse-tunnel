@@ -76,7 +76,7 @@ func (sess *Session) Start(ws *websocket.Conn) error {
 		ws.Close()
 	}()
 
-	buf := make([]byte, bufferSize)
+	buf := make([]byte, config.BufferSize)
 
 	for {
 		_, r, err := ws.NextReader()

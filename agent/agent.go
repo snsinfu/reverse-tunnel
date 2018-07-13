@@ -82,7 +82,7 @@ func remoteListenTCP(forw config.Forward, conf config.Agent) error {
 
 			// Uplink
 			tasks.Go(func() error {
-				buf := make([]byte, 1500)
+				buf := make([]byte, config.BufferSize)
 
 				for {
 					_, r, err := ws.NextReader()
@@ -103,7 +103,7 @@ func remoteListenTCP(forw config.Forward, conf config.Agent) error {
 
 			// Downlink
 			tasks.Go(func() error {
-				buf := make([]byte, 1500)
+				buf := make([]byte, config.BufferSize)
 
 				for {
 					n, err := conn.Read(buf)
@@ -168,7 +168,7 @@ func remoteListenUDP(forw config.Forward, conf config.Agent) error {
 
 			// Uplink
 			tasks.Go(func() error {
-				buf := make([]byte, 1500)
+				buf := make([]byte, config.BufferSize)
 
 				for {
 					_, r, err := ws.NextReader()
@@ -189,7 +189,7 @@ func remoteListenUDP(forw config.Forward, conf config.Agent) error {
 
 			// Downlink
 			tasks.Go(func() error {
-				buf := make([]byte, 1500)
+				buf := make([]byte, config.BufferSize)
 
 				for {
 					n, err := conn.Read(buf)
