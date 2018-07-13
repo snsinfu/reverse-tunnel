@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	binderTimeout = 100 * time.Second
+	binderTimeout = 3 * time.Second
 	network       = "udp4"
 )
 
