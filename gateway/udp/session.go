@@ -8,6 +8,7 @@ import (
 	"unsafe"
 
 	"github.com/gorilla/websocket"
+	"github.com/snsinfu/reverse-tunnel/config"
 	"github.com/snsinfu/reverse-tunnel/uid"
 )
 

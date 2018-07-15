@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+
+	"github.com/snsinfu/reverse-tunnel/config"
 )
 
 const (
@@ -27,7 +29,7 @@ func (binder Binder) Start(ws *websocket.Conn) error {
 
 	go watchConnLoss(ws, binderTimeout, conn.Close)
 
-	buf := make([]byte, bufferSize)
+	buf := make([]byte, config.BufferSize)
 
 	for {
 		n, peer, err := conn.ReadFromUDP(buf)
