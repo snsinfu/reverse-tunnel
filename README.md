@@ -2,6 +2,7 @@ Reverse tunnel TCP and UDP
 ==========================
 
 [![Release][release-badge]][release-url]
+[![Build Status][travis-badge]][travis-url]
 [![MIT License][license-badge]][license-url]
 
 [release-badge]: https://img.shields.io/github/release/snsinfu/reverse-tunnel.svg
