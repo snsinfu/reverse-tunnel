@@ -1,6 +1,6 @@
 PRODUCTS = rtun rtun-server
 
-.PHONY: all clean lint test
+.PHONY: all clean lint test deps
 
 all: $(PRODUCTS)
 	@:
@@ -14,8 +14,11 @@ lint:
 test:
 	go test ./...
 
-rtun: agent/* agent/cmd/*
+deps:
+	go get ./...
+
+rtun: deps agent/* agent/cmd/*
 	go build -o $@ ./agent/cmd
 
-rtun-server: server/* server/cmd/* server/tcp/* server/udp/* server/service/*
+rtun-server: deps server/* server/cmd/* server/tcp/* server/udp/* server/service/*
 	go build -o $@ ./server/cmd
