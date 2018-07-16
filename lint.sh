@@ -1,10 +1,10 @@
 #!/bin/sh
 
 run() {
-    printf "[36m%s[m\n" "$*"
-    printf "[33m"
+    printf "\033[36m%s\033[m\n" "$*"
+    printf "\033[33m"
     "$@"
-    printf "[m"
+    printf "\033[m"
 }
 
 gocyclo_check() {
