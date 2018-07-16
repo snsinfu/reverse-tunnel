@@ -4,6 +4,11 @@ import (
 	"github.com/snsinfu/reverse-tunnel/ports"
 )
 
+// ServerDefault is a default server configuration.
+var ServerDefault = Server{
+	ControlAddress: "localhost:9000",
+}
+
 // Server represents a configuration of a reverse tunnel server program.
 type Server struct {
 	ControlAddress string      `yaml:"control_address"`
