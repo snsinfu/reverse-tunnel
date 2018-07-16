@@ -14,8 +14,8 @@ lint:
 test:
 	go test ./...
 
-rtun: agent/* config/*
-	go build -o $@ ./agent
+rtun: agent/* agent/cmd/*
+	go build -o $@ ./agent/cmd
 
-rtun-server: server/* config/*
-	go build -o $@ ./server
+rtun-server: server/* server/cmd/* server/tcp/* server/udp/* server/service/*
+	go build -o $@ ./server/cmd
