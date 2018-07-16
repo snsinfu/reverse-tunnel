@@ -14,15 +14,16 @@ Reverse tunnel TCP and UDP
 [report-url]: https://goreportcard.com/report/github.com/snsifnu/reverse-tunnel
 
 This repository contains **rtun**, a tool for easily exposing TCP and UDP ports
-to the Internet via a public gateway server. It works with ssh and mosh for
-example.
+to the Internet via a public gateway server. It can be used, for example, to
+expose ssh and mosh server behind firewall and NAT.
 
-- [Insgtall](#install)
+- [Build](#build)
 - [Usage](#usage)
-- [Security concern](#security-concern)
+  - [Gateway server](#gateway-server)
+  - [Agent](#agent)
 - [License](#license)
 
-## Install
+## Build
 
 ```console
 git clone https://github.com/snsinfu/reverse-tunnel
