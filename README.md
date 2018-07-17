@@ -81,11 +81,11 @@ auth_key: a79a4c3ae4ecd33b7c078631d3424137ff332d7897ecd6e9ddee28df138a0064
 forwards:
   # Forward 10022/tcp on the gateway server to localhost:22 (tcp)
   - port: 10022/tcp
-    destination: localhost:22
+    destination: 127.0.0.1:22
 
   # Forward 10022/udp on the gateway server to localhost:10022 (udp)
   - port: 10022/udp
-    destination: localhost:10022
+    destination: 127.0.0.1:10022
 ```
 
 And run agent:
