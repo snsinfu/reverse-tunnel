@@ -27,8 +27,9 @@ expose ssh and mosh server behind firewall and NAT.
 ## Build
 
 ```console
-git clone https://github.com/snsinfu/reverse-tunnel
-cd reverse-tunnel
+cd $(go env GOPATH)
+git clone https://github.com/snsinfu/reverse-tunnel src/github.com/snsinfu/reverse-tunnel
+cd src/github.com/snsinfu/reverse-tunnel
 make
 ```
 
