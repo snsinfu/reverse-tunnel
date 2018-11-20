@@ -56,18 +56,8 @@ func (sess Session) Start(ws *websocket.Conn) error {
 				return err
 			}
 
-			for {
-				n, err := r.Read(buf)
-				if err != nil {
-					if err == io.EOF {
-						break
-					}
-					return err
-				}
-
-				if _, err := sess.conn.Write(buf[:n]); err != nil {
-					return err
-				}
+			if _, err := io.CopyBuffer(sess.conn, r, buf); err != nil {
+				return err
 			}
 		}
 	})

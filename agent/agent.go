@@ -94,18 +94,8 @@ func (agent Agent) Start() error {
 						return err
 					}
 
-					for {
-						n, err := r.Read(buf)
-						if err != nil {
-							if err == io.EOF {
-								break
-							}
-							return err
-						}
-
-						if _, err := conn.Write(buf[:n]); err != nil {
-							return err
-						}
+					if _, err := io.CopyBuffer(conn, r, buf); err != nil {
+						return err
 					}
 				}
 			})
