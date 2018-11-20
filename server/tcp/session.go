@@ -1,6 +1,7 @@
 package tcp
 
 import (
+	"io"
 	"net"
 
 	"github.com/gorilla/websocket"
@@ -55,13 +56,18 @@ func (sess Session) Start(ws *websocket.Conn) error {
 				return err
 			}
 
-			n, err := r.Read(buf)
-			if err != nil {
-				return err
-			}
+			for {
+				n, err := r.Read(buf)
+				if err != nil {
+					if err == io.EOF {
+						break
+					}
+					return err
+				}
 
-			if _, err := sess.conn.Write(buf[:n]); err != nil {
-				return err
+				if _, err := sess.conn.Write(buf[:n]); err != nil {
+					return err
+				}
 			}
 		}
 	})

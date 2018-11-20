@@ -2,6 +2,7 @@ package udp
 
 import (
 	"errors"
+	"io"
 	"net"
 	"sync/atomic"
 	"time"
@@ -86,13 +87,18 @@ func (sess *Session) Start(ws *websocket.Conn) error {
 			return err
 		}
 
-		n, err := r.Read(buf)
-		if err != nil {
-			return err
-		}
+		for {
+			n, err := r.Read(buf)
+			if err != nil {
+				if err == io.EOF {
+					break
+				}
+				return err
+			}
 
-		if err := sess.SendToClient(buf[:n]); err != nil {
-			return err
+			if err := sess.SendToClient(buf[:n]); err != nil {
+				return err
+			}
 		}
 	}
 }
