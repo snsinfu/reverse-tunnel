@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/snsinfu/go-taskch"
@@ -13,6 +14,8 @@ import (
 	"github.com/snsinfu/reverse-tunnel/ports"
 	"github.com/snsinfu/reverse-tunnel/server/service"
 )
+
+const retryInterval = 10 * time.Second
 
 // dialer is the websocket dialer used to connect to a gateway server.
 var dialer = websocket.DefaultDialer
@@ -37,7 +40,16 @@ func Start(conf config.Agent) error {
 			destination: forw.Destination,
 		}
 
-		tasks.Go(agent.Start)
+		tasks.Go(func() error {
+			delay := time.Tick(retryInterval)
+			for {
+				if err := agent.Start(); err != nil {
+					log.Printf("Agent error %q - recovering...", err)
+					<-delay
+				}
+			}
+			return nil
+		})
 	}
 
 	return tasks.Wait()
