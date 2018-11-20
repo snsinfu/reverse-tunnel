@@ -6,12 +6,13 @@
    - GOARCH=amd64 GOOS=freebsd make rtun        && mv rtun        rtun-amd64-freebsd
    - GOARCH=amd64 GOOS=linux   make rtun-server && mv rtun-server rtun-server-amd64-linux
    - GOARCH=amd64 GOOS=linux   make rtun        && mv rtun        rtun-amd64-linux
-   - GOARCH=amd64 GOOS=darwin  make rtun        && mv rtun        rtun-amd64-mac
+   - GOARCH=amd64 GOOS=darwin  make rtun        && mv rtun        rtun-mac
 
  deploy:
    provider: releases
    api_key: $GITHUB_TOKEN
    skip_cleanup: true
+   file_glob: true
    file: rtun-*
    on:
      tags: true
