@@ -2,11 +2,11 @@
  go: "1.11"
 
  script:
-   - GOARCH=amd64 GOOS=freebsd make rtun && mv rtun-server rtun-server-amd64-freebsd
-   - GOARCH=amd64 GOOS=freebsd make rtun && mv rtun        rtun-amd64-freebsd
-   - GOARCH=amd64 GOOS=linux   make rtun && mv rtun-server rtun-server-amd64-linux
-   - GOARCH=amd64 GOOS=linux   make rtun && mv rtun        rtun-amd64-linux
-   - GOARCH=amd64 GOOS=darwin  make rtun && mv rtun        rtun-amd64-mac
+   - GOARCH=amd64 GOOS=freebsd make rtun-server && mv rtun-server rtun-server-amd64-freebsd
+   - GOARCH=amd64 GOOS=freebsd make rtun        && mv rtun        rtun-amd64-freebsd
+   - GOARCH=amd64 GOOS=linux   make rtun-server && mv rtun-server rtun-server-amd64-linux
+   - GOARCH=amd64 GOOS=linux   make rtun        && mv rtun        rtun-amd64-linux
+   - GOARCH=amd64 GOOS=darwin  make rtun        && mv rtun        rtun-amd64-mac
 
  deploy:
    provider: releases
