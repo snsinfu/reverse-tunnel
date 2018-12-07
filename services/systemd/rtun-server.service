@@ -1,0 +1,10 @@
+[Unit]
+Description=Rtun tunneling server
+
+[Service]
+Type=simple
+ExecStart=%h/bin/rtun-server -f %h/.rtun-server.yml
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Rtun tunneling agent
+
+[Service]
+Type=simple
+ExecStart=%h/bin/rtun -f %h/.rtun.yml
+Restart=always
+
+[Install]
+WantedBy=default.target
