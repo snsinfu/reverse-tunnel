@@ -66,6 +66,26 @@ server and agent uses WebSocket for communication, so the gateway server may be
 placed behind an HTTPS reverse proxy like caddy. This way the tunnel can be
 secured by TLS.
 
+#### Standalone TLS
+
+`rtun-server` supports automatic acquisition and renewal of TLS certificate.
+Set control address to `:443` and `domain` to the domain
+name of the public gateway server.
+
+```
+control_address: :443
+
+lets_encrypt:
+  domain: rtun.example.com
+```
+
+Non-root user can not use port 443 by default. You may probably want to allow
+`rtun-server` bind to privileged port using `setcap` on Linux:
+
+```
+sudo setcap cap_net_bind_service=+ep rtun-server
+```
+
 ### Agent
 
 Create a configuration file named `rtun.yml`:
@@ -93,7 +113,7 @@ And run agent:
 ./rtun
 ```
 
-Note: When you are using HTTPS reverse proxy the gateway URL should start with
+Note: When you are using TLS on the server the gateway URL should start with
 `wss://` instead of `ws://`.
 
 ## License
