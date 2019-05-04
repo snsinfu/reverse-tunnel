@@ -1,0 +1,8 @@
+control_address: :443
+
+lets_encrypt:
+  domain: ${hostname}
+
+agents:
+  - auth_key: ${auth_key}
+    ports: [10022/tcp, 60000/udp]

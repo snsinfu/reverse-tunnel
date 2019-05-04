@@ -1,0 +1,24 @@
+#cloud-config
+
+timezone: UTC
+
+groups:
+  - ssh_users
+
+write_files:
+  - path: /etc/ssh/sshd_config
+    content: |
+      AddressFamily inet
+      AllowGroups ssh_users
+      PermitRootLogin no
+      PasswordAuthentication no
+      ChallengeResponseAuthentication no
+      UsePAM yes
+      Subsystem sftp /usr/lib/openssh/sftp-server
+
+system_info:
+  default_user:
+    name: ${admin_user}
+    groups: ssh_users
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL

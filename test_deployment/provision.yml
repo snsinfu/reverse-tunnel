@@ -1,0 +1,32 @@
+- hosts: all
+  become: no
+
+  tasks:
+    - name: operational packages are installed
+      apt:
+        name:
+          - mosh
+          - tmux
+        state: present
+      become: yes
+
+    - name: setcap is installed
+      apt:
+        name: libcap2-bin
+        state: present
+      become: yes
+
+    - name: rtun-server is up
+      copy:
+        src: rtun-server
+        dest: .
+        mode: 0744
+
+    - name: rtun-server can bind to privileged port
+      command: setcap "cap_net_bind_service=+ep" rtun-server
+      become: yes
+
+    - name: rtun-server config is up
+      copy:
+        src: rtun-server.yml
+        dest: .

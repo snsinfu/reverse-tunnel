@@ -1,0 +1,9 @@
+gateway_url: wss://${hostname}
+auth_key: ${auth_key}
+
+forwards:
+  - port: 10022/tcp
+    destination: 127.0.0.1:22
+
+  - port: 60000/udp
+    destination: 127.0.0.1:60000

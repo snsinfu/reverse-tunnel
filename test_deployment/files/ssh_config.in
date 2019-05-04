@@ -1,0 +1,6 @@
+Host test-machine
+HostName ${host_address}
+UserKnownHostsFile _known_hosts
+PasswordAuthentication no
+IdentitiesOnly yes
+User ${admin_user}
