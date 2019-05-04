@@ -1,0 +1,8 @@
+control_address: :443
+
+lets_encrypt:
+  domain: example.com
+
+agents:
+  - auth_key: example-key-bb260b7f809aafb6
+    ports: [10022/tcp, 60000/udp]
