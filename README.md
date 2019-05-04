@@ -14,9 +14,9 @@ Reverse tunnel TCP and UDP
 [report-badge]: https://goreportcard.com/badge/github.com/snsinfu/reverse-tunnel
 [report-url]: https://goreportcard.com/report/github.com/snsifnu/reverse-tunnel
 
-This repository contains **rtun**, a tool for easily exposing TCP and UDP ports
-to the Internet via a public gateway server. It can be used, for example, to
-expose ssh and mosh server behind firewall and NAT.
+**rtun** is a tool for exposing TCP and UDP ports to the Internet via a public
+gateway server. You can expose ssh and mosh server on a machine behind firewall
+and NAT.
 
 - [Build](#build)
 - [Usage](#usage)
@@ -27,14 +27,13 @@ expose ssh and mosh server behind firewall and NAT.
 ## Build
 
 ```console
-cd $(go env GOPATH)
-git clone https://github.com/snsinfu/reverse-tunnel src/github.com/snsinfu/reverse-tunnel
-cd src/github.com/snsinfu/reverse-tunnel
+git clone https://github.com/snsinfu/reverse-tunnel
+cd reverse-tunnel
 make
 ```
 
-This produces two executable files named `rtun` and `rtun-server`. Place
-`rtun-server` in a public server.
+The `make` command produces two executable files: `rtun` and `rtun-server`. Put
+`rtun-server` in a public server and `rtun` in a local machine.
 
 ## Usage
 
