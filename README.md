@@ -6,7 +6,7 @@ Reverse tunnel TCP and UDP
 [![MIT License][license-badge]][license-url]
 
 [release-badge]: https://img.shields.io/github/release/snsinfu/reverse-tunnel.svg
-[release-url]: https://raw.githubusercontent.com/snsinfu/reverse-tunnel/releases
+[release-url]: https://github.com/snsinfu/reverse-tunnel/releases
 [travis-badge]: https://travis-ci.org/snsinfu/reverse-tunnel.svg?branch=master
 [travis-url]: https://travis-ci.org/snsinfu/reverse-tunnel
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
