@@ -51,7 +51,7 @@ control_address: 0.0.0.0:9000
 # List of authorized agents follows.
 agents:
   - auth_key: a79a4c3ae4ecd33b7c078631d3424137ff332d7897ecd6e9ddee28df138a0064
-    ports: [10022/tcp, 10022/udp]
+    ports: [10022/tcp, 60000/udp]
 ```
 
 You may want to generate `auth_key` with `openssl rand -hex 32`. Agents are
@@ -105,9 +105,9 @@ forwards:
   - port: 10022/tcp
     destination: 127.0.0.1:22
 
-  # Forward 10022/udp on the gateway server to localhost:10022 (udp)
-  - port: 10022/udp
-    destination: 127.0.0.1:10022
+  # Forward 60000/udp on the gateway server to localhost:60000 (udp)
+  - port: 60000/udp
+    destination: 127.0.0.1:60000
 ```
 
 And run agent:
@@ -117,7 +117,12 @@ And run agent:
 ```
 
 Note: When you are using TLS on the server the gateway URL should start with
-`wss://` instead of `ws://`.
+`wss://` instead of `ws://`. In this case, the port number should most likely
+be the default:
+
+```yaml
+gateway_url: wss://the-gateway-server.example.com
+```
 
 ## License
 
