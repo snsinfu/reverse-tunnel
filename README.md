@@ -29,7 +29,6 @@ and NAT.
 Outside your GOPATH, run
 
 ```console
-export GO111MODULE=on
 git clone https://github.com/snsinfu/reverse-tunnel
 cd reverse-tunnel
 make
