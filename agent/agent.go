@@ -48,7 +48,6 @@ func Start(conf config.Agent) error {
 					<-delay
 				}
 			}
-			return nil
 		})
 	}
 
