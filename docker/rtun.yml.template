@@ -1,0 +1,10 @@
+gateway_url: "{{ .env.RTUN_GATEWAY }}"
+auth_key: "{{ .env.RTUN_KEY }}"
+
+forwards:
+{{- range .env.RTUN_FORWARD | split "," | strip | nonempty }}
+  {{- $port := . | before "," }}
+  {{- $dest := . | before "," }}
+  - port: "{{ $port }}"
+    destination: "{{ $dest }}"
+{{- end }}

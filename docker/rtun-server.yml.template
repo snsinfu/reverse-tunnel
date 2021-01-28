@@ -1,0 +1,17 @@
+control_address: 0.0.0.0:9000
+
+agents:
+{{- range .env.RTUN_AGENT | split ";" | strip | nonempty }}
+  {{- $ports := . | before "@" | strip }}
+  {{- $key := . | after "@" | strip }}
+  - auth_key: "{{ $key }}"
+    ports:
+    {{- range $ports | split "," }}
+      - "{{ . }}"
+    {{- end }}
+{{- end }}
+
+{{ if index .env "RTUN_TLS" -}}
+lets_encrypt:
+  domain: "{{ .env.RTUN_TLS }}"
+{{ end -}}
