@@ -1,0 +1,6 @@
+gateway_url: ws://localhost:9000
+auth_key: sample-key-00000000
+
+forwards:
+  - port: 18080/tcp
+    destination: localhost:8080

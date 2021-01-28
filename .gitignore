@@ -6,5 +6,8 @@ _*
 
 rtun
 rtun-server
+
 rtun.yml
 rtun-server.yml
+!/tests/test_*/rtun.yml
+!/tests/test_*/rtun-server.yml
