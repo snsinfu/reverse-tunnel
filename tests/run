@@ -1,0 +1,28 @@
+#!/bin/sh -e
+
+cd "$(dirname "$0")"
+
+echo "Building executables..."
+go build -o rtun ../agent/cmd
+go build -o rtun-server ../server/cmd
+
+PATH="${PWD}:${PATH}"
+
+echo "Running tests..."
+fail=0
+
+for testcase in test_*; do
+    echo ""
+    echo "--- ${testcase}"
+
+    cd "${testcase}"
+    if sh main.sh; then
+        echo ">> PASS"
+    else
+        echo "!! FAIL"
+        fail=1
+    fi
+    cd ..
+done
+
+exit ${fail}

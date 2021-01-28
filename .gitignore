@@ -1,4 +1,9 @@
-/_*
+.*
+_*
+
+!.gitignore
+!.github
+
 rtun
 rtun-server
 rtun.yml
