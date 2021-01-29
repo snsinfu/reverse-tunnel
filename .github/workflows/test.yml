@@ -18,12 +18,13 @@ jobs:
       - run: go test ./...
       - run: tests/run
 
-
   build:
-    name: Check dockerfiles
+    name: Build image
     runs-on: ubuntu-latest
     steps:
 
+      - uses: actions/checkout@v2
+      - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
 
       - uses: docker/build-push-action@v2
