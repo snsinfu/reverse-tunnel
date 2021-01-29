@@ -2,8 +2,8 @@ echo "Should forward local connection"
 set -e
 
 echo "* Building echo server and client..."
-go build -o _echoserver echoserver.go
-go build -o _echoclient echoclient.go
+go build -o _echoserver ./echoserver
+go build -o _echoclient ./echoclient
 
 echo "* Starting tunneling server..."
 timeout 20s rtun-server -f rtun-server.yml &
