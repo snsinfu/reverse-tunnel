@@ -1,29 +1,30 @@
 echo "Should forward local connection"
 set -e
 
+echo "* Building echo server and client..."
+go build -o _echoserver echoserver.go
+go build -o _echoclient echoclient.go
+
 echo "* Starting tunneling server..."
-rtun-server -f rtun-server.yml &
+timeout 20s rtun-server -f rtun-server.yml &
 pid_server=$!
 
 sleep 1
 
 echo "* Starting tunneling agent..."
-rtun -f rtun.yml &
+timeout 20s rtun -f rtun.yml &
 pid_agent=$!
 
 sleep 1
 
 echo "* Starting local echo server..."
-go run echoserver.go 127.0.0.1:8080 &
+./_echoserver 127.0.0.1:8080 &
 
-sleep 3
+sleep 1
 
 echo "* Testing tunneled connection..."
 expect="OK 10e03ca70fcaae2c"
-actual="$({ echo "${expect}"; sleep 1; } | nc 127.0.0.1 18080)"
-# XXX: nc cannot reliably receive response unless we sleep after echoing. This
-# occurs when the connection is tunneled. This would be a timing bug of rtun,
-# rtun-server or the tunneling protocol.
+actual="$(echo "${expect}" | ./_echoclient 127.0.0.1:18080)"
 
 sleep 1
 
