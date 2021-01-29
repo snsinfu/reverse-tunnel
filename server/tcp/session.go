@@ -62,7 +62,7 @@ func (sess Session) Start(ws *websocket.Conn) error {
 		}
 	})
 
-	if err := tasks.Wait(); err != nil && err != io.EOF{
+	if err := tasks.Wait(); err != nil && err != io.EOF {
 		return err
 	}
 	return nil
