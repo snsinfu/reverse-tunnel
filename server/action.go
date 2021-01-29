@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/websocket"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/snsinfu/reverse-tunnel/config"
 	"github.com/snsinfu/reverse-tunnel/server/service"
 	"github.com/snsinfu/reverse-tunnel/server/tcp"

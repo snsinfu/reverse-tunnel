@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/snsinfu/reverse-tunnel/config"
 	"golang.org/x/crypto/acme/autocert"
 )
@@ -10,6 +10,7 @@ import (
 // Start starts tunneling server with given configuration.
 func Start(conf config.Server) error {
 	e := echo.New()
+	e.HideBanner = true
 
 	// Enable TLS when Let's Encrypt domain is configured. Do not require the
 	// control address port to be 443 because the port could be redirected.

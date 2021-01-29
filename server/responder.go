@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 // wsCloseTimeout is the timeout of a WebSocket close message.
