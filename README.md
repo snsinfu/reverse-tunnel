@@ -1,18 +1,15 @@
 Reverse tunnel TCP and UDP
 ==========================
 
+[![Build Status][build-badge]][build-url]
 [![Release][release-badge]][release-url]
-[![Build Status][travis-badge]][travis-url]
-[![MIT License][license-badge]][license-url]
+[![MIT License][license-badge]](LICENSE.txt)
 
-[release-badge]: https://img.shields.io/github/release/snsinfu/reverse-tunnel.svg
-[release-url]: https://github.com/snsinfu/reverse-tunnel/releases
+[build-badge]: https://github.com/snsinfu/reverse-tunnel/workflows/test/badge.svg
+[build-url]: https://github.com/snsinfu/reverse-tunnel/actions?query=workflow%3Atest
 [travis-badge]: https://travis-ci.org/snsinfu/reverse-tunnel.svg?branch=master
 [travis-url]: https://travis-ci.org/snsinfu/reverse-tunnel
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license-url]: https://raw.githubusercontent.com/snsinfu/reverse-tunnel/master/LICENSE
-[report-badge]: https://goreportcard.com/badge/github.com/snsinfu/reverse-tunnel
-[report-url]: https://goreportcard.com/report/github.com/snsifnu/reverse-tunnel
 
 **rtun** is a tool for exposing TCP and UDP ports to the Internet via a public
 gateway server. You can expose ssh and mosh server on a machine behind firewall
