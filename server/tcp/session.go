@@ -62,7 +62,10 @@ func (sess Session) Start(ws *websocket.Conn) error {
 		}
 	})
 
-	return tasks.Wait()
+	if err := tasks.Wait(); err != nil && err != io.EOF{
+		return err
+	}
+	return nil
 }
 
 // Close closes client connection.

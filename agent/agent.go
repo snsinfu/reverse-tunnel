@@ -127,7 +127,10 @@ func (agent Agent) Start() error {
 				}
 			})
 
-			return tasks.Wait()
+			if err := tasks.Wait(); err != nil && err != io.EOF{
+				return err
+			}
+			return nil
 		}()
 	}
 }
