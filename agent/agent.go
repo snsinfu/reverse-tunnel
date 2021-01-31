@@ -75,62 +75,71 @@ func (agent Agent) Start() error {
 			return err
 		}
 
-		log.Printf("Tunneling remote connection from %s to %s", accept.PeerAddress, agent.destination)
-
-		go func() error {
-			defer log.Printf("Closing connection from %s", accept.PeerAddress)
-
-			conn, err := net.Dial(agent.service.Protocol, agent.destination)
-			if err != nil {
-				return err
+		go func() {
+			if err := agent.tunnel(accept); err != nil {
+				log.Printf("Tunnelling error: %s", err)
 			}
-			defer conn.Close()
-
-			url := agent.gatewayURL + "/session/" + accept.SessionID
-			ws, _, err := dialer.Dial(url, nil)
-			if err != nil {
-				return err
-			}
-			defer ws.Close()
-
-			tasks := taskch.New()
-
-			// Uplink
-			tasks.Go(func() error {
-				buf := make([]byte, config.BufferSize)
-
-				for {
-					_, r, err := ws.NextReader()
-					if err != nil {
-						return err
-					}
-
-					if _, err := io.CopyBuffer(conn, r, buf); err != nil {
-						return err
-					}
-				}
-			})
-
-			// Downlink
-			tasks.Go(func() error {
-				buf := make([]byte, config.BufferSize)
-
-				for {
-					n, err := conn.Read(buf)
-					if err != nil {
-						return err
-					}
-
-					if err := ws.WriteMessage(websocket.BinaryMessage, buf[:n]); err != nil {
-						return err
-					}
-				}
-			})
-
-			if err := tasks.Wait(); err != nil && err != io.EOF {
-				return err
-			}
-			return nil
 		}()
 	}
+}
+
+func (agent Agent) tunnel(accept service.BinderAcceptMessage) error {
+	log.Printf(
+		"Tunneling remote connection from %s to %s",
+		accept.PeerAddress,
+		agent.destination,
+	)
+	defer log.Printf("Closing connection from %s", accept.PeerAddress)
+
+	conn, err := net.Dial(agent.service.Protocol, agent.destination)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	url := agent.gatewayURL + "/session/" + accept.SessionID
+	ws, _, err := dialer.Dial(url, nil)
+	if err != nil {
+		return err
+	}
+	defer ws.Close()
+
+	tasks := taskch.New()
+
+	// Uplink
+	tasks.Go(func() error {
+		buf := make([]byte, config.BufferSize)
+
+		for {
+			_, r, err := ws.NextReader()
+			if err != nil {
+				return err
+			}
+
+			if _, err := io.CopyBuffer(conn, r, buf); err != nil {
+				return err
+			}
+		}
+	})
+
+	// Downlink
+	tasks.Go(func() error {
+		buf := make([]byte, config.BufferSize)
+
+		for {
+			n, err := conn.Read(buf)
+			if err != nil {
+				return err
+			}
+
+			if err := ws.WriteMessage(websocket.BinaryMessage, buf[:n]); err != nil {
+				return err
+			}
+		}
+	})
+
+	if err := tasks.Wait(); err != nil && err != io.EOF {
+		return err
+	}
+	return nil
 }
