@@ -16,23 +16,41 @@ gateway server. You can expose ssh and mosh server on a machine behind firewall
 and NAT.
 
 - [Build](#build)
+- [Docker](#docker)
 - [Usage](#usage)
   - [Gateway server](#gateway-server)
   - [Agent](#agent)
 - [License](#license)
 
+
 ## Build
 
-Outside your GOPATH, run
+Compiled binaries are available in the [release page][release-url]. To build
+your own ones, clone the repository and make:
 
 ```console
-git clone https://github.com/snsinfu/reverse-tunnel
-cd reverse-tunnel
-make
+$ git clone https://github.com/snsinfu/reverse-tunnel
+$ cd reverse-tunnel
+$ make
 ```
 
-The `make` command produces two executable files: `rtun` and `rtun-server`. Put
-`rtun-server` in a public server and `rtun` in a local machine.
+Or,
+
+```console
+$ go build -o rtun github.com/snsinfu/reverse-tunnel/agent/cmd
+$ go build -o rtun-server github.com/snsinfu/reverse-tunnel/server/cmd
+```
+
+
+## Docker
+
+Docker images are available:
+
+- https://hub.docker.com/repository/docker/snsinfu/rtun
+- https://hub.docker.com/repository/docker/snsinfu/rtun-server
+
+See [docker image readme](docker/README.md).
+
 
 ## Usage
 
@@ -57,7 +75,7 @@ listed in the configuration file.
 Then, start gateway server:
 
 ```console
-./rtun-server
+$ ./rtun-server
 ```
 
 Now agents can connect to the gateway server and start reverse tunneling. The
@@ -109,7 +127,7 @@ forwards:
 And run agent:
 
 ```console
-./rtun
+$ ./rtun
 ```
 
 Note: When you are using TLS on the server the gateway URL should start with
@@ -119,6 +137,7 @@ be the default:
 ```yaml
 gateway_url: wss://the-gateway-server.example.com
 ```
+
 
 ## License
 
