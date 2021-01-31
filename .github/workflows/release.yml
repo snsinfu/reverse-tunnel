@@ -66,7 +66,7 @@ jobs:
 
       # UPLOAD ASSETS --------------------------------------------------------
 
-      # linux/amd64
+      # AGENT
 
       - uses: actions/upload-release-asset@v1
         env:
@@ -82,31 +82,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.build_linux_amd64.outputs.server }}
-          asset_name: ${{ steps.build_linux_amd64.outputs.server }}
-          asset_content_type: application/octet-stream
-
-      # linux/arm64
-
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ steps.build_linux_arm64.outputs.agent }}
           asset_name: ${{ steps.build_linux_arm64.outputs.agent }}
           asset_content_type: application/octet-stream
-
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.build_linux_arm64.outputs.server }}
-          asset_name: ${{ steps.build_linux_arm64.outputs.server }}
-          asset_content_type: application/octet-stream
-
-      # freebsd/amd64
 
       - uses: actions/upload-release-asset@v1
         env:
@@ -122,17 +100,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.build_freebsd_amd64.outputs.server }}
-          asset_name: ${{ steps.build_freebsd_amd64.outputs.server }}
-          asset_content_type: application/octet-stream
-
-      # darwin/amd64
-
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ steps.build_darwin_amd64.outputs.agent }}
           asset_name: ${{ steps.build_darwin_amd64.outputs.agent }}
           asset_content_type: application/octet-stream
@@ -142,19 +109,46 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.build_darwin_amd64.outputs.server }}
-          asset_name: ${{ steps.build_darwin_amd64.outputs.server }}
+          asset_path: ${{ steps.build_windows_amd64.outputs.agent }}
+          asset_name: ${{ steps.build_windows_amd64.outputs.agent }}
           asset_content_type: application/octet-stream
 
-      # windows/amd64
+      # SERVER
 
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.build_windows_amd64.outputs.agent }}
-          asset_name: ${{ steps.build_windows_amd64.outputs.agent }}
+          asset_path: ${{ steps.build_linux_amd64.outputs.server }}
+          asset_name: ${{ steps.build_linux_amd64.outputs.server }}
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_linux_arm64.outputs.server }}
+          asset_name: ${{ steps.build_linux_arm64.outputs.server }}
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_freebsd_amd64.outputs.server }}
+          asset_name: ${{ steps.build_freebsd_amd64.outputs.server }}
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_darwin_amd64.outputs.server }}
+          asset_name: ${{ steps.build_darwin_amd64.outputs.server }}
           asset_content_type: application/octet-stream
 
       - uses: actions/upload-release-asset@v1

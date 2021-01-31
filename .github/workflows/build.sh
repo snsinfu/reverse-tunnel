@@ -1,10 +1,15 @@
 #!/bin/sh -eux
 
-suffix="${GOARCH}-${GOOS}"
+suffix="${GOOS}-${GOARCH}"
 
-if [ "${GOOS}" = windows ]; then
+case "${suffix}" in
+darwin-*)
+    suffix="mac-${GOARCH}"
+    ;;
+windows-*)
     suffix="${suffix}.exe"
-fi
+    ;;
+esac
 
 agent_filename="rtun-${suffix}"
 server_filename="rtun-server-${suffix}"
