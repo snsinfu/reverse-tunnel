@@ -1,4 +1,4 @@
-control_address: 0.0.0.0:9000
+control_address: 0.0.0.0:{{ .env.RTUN_PORT }}
 
 agents:
 {{- range .env.RTUN_AGENT | split ";" | strip | nonempty }}
