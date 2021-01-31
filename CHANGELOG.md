@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.2.3
 
 - Fixed misconfiguration in the agent docker image
 
