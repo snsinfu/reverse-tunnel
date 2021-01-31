@@ -28,9 +28,19 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: .
-          file: docker/Dockerfile
+          file: docker/Dockerfile.agent
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ secrets.DOCKERHUB_REPOSITORY }}:latest
-            ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ env.VERSION }}
+            snsinfu/rtun:latest
+            snsinfu/rtun:${{ env.VERSION }}
+          push: true
+
+      - uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: docker/Dockerfile.server
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            snsinfu/rtun-server:latest
+            snsinfu/rtun-server:${{ env.VERSION }}
           push: true
