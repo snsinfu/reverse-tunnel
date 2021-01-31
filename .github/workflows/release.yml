@@ -1,0 +1,167 @@
+name: release
+
+on:
+  push:
+    tags: "v*"
+
+jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+
+      - name: Set metadata
+        run: |
+          version="${GITHUB_REF#refs/tags/v}"
+          echo "VERSION=${version}" >> ${GITHUB_ENV}
+
+
+      # GITHUB RELEASE -------------------------------------------------------
+
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+
+
+      # BUILD ----------------------------------------------------------------
+
+      - id: build_linux_amd64
+        run: .github/workflows/build.sh
+        env:
+          GOOS: linux
+          GOARCH: amd64
+
+      - id: build_linux_arm64
+        run: .github/workflows/build.sh
+        env:
+          GOOS: linux
+          GOARCH: arm64
+
+      - id: build_freebsd_amd64
+        run: .github/workflows/build.sh
+        env:
+          GOOS: freebsd
+          GOARCH: amd64
+
+      - id: build_darwin_amd64
+        run: .github/workflows/build.sh
+        env:
+          GOOS: darwin
+          GOARCH: amd64
+
+      - id: build_windows_amd64
+        run: .github/workflows/build.sh
+        env:
+          GOOS: windows
+          GOARCH: amd64
+
+
+      # UPLOAD ASSETS --------------------------------------------------------
+
+      # linux/amd64
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_linux_amd64.outputs.agent }}
+          asset_name: ${{ steps.build_linux_amd64.outputs.agent }}
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_linux_amd64.outputs.server }}
+          asset_name: ${{ steps.build_linux_amd64.outputs.server }}
+          asset_content_type: application/octet-stream
+
+      # linux/arm64
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_linux_arm64.outputs.agent }}
+          asset_name: ${{ steps.build_linux_arm64.outputs.agent }}
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_linux_arm64.outputs.server }}
+          asset_name: ${{ steps.build_linux_arm64.outputs.server }}
+          asset_content_type: application/octet-stream
+
+      # freebsd/amd64
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_freebsd_amd64.outputs.agent }}
+          asset_name: ${{ steps.build_freebsd_amd64.outputs.agent }}
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_freebsd_amd64.outputs.server }}
+          asset_name: ${{ steps.build_freebsd_amd64.outputs.server }}
+          asset_content_type: application/octet-stream
+
+      # darwin/amd64
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_darwin_amd64.outputs.agent }}
+          asset_name: ${{ steps.build_darwin_amd64.outputs.agent }}
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_darwin_amd64.outputs.server }}
+          asset_name: ${{ steps.build_darwin_amd64.outputs.server }}
+          asset_content_type: application/octet-stream
+
+      # windows/amd64
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_windows_amd64.outputs.agent }}
+          asset_name: ${{ steps.build_windows_amd64.outputs.agent }}
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_windows_amd64.outputs.server }}
+          asset_name: ${{ steps.build_windows_amd64.outputs.server }}
+          asset_content_type: application/octet-stream

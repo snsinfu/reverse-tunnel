@@ -7,8 +7,8 @@ Reverse tunnel TCP and UDP
 
 [build-badge]: https://github.com/snsinfu/reverse-tunnel/workflows/test/badge.svg
 [build-url]: https://github.com/snsinfu/reverse-tunnel/actions?query=workflow%3Atest
-[travis-badge]: https://travis-ci.org/snsinfu/reverse-tunnel.svg?branch=master
-[travis-url]: https://travis-ci.org/snsinfu/reverse-tunnel
+[release-badge]: https://img.shields.io/github/release/snsinfu/reverse-tunnel.svg
+[release-url]: https://github.com/snsinfu/reverse-tunnel/releases
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 
 **rtun** is a tool for exposing TCP and UDP ports to the Internet via a public
