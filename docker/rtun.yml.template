@@ -4,7 +4,7 @@ auth_key: "{{ .env.RTUN_KEY }}"
 forwards:
 {{- range .env.RTUN_FORWARD | split "," | strip | nonempty }}
   {{- $port := . | before ":" }}
-  {{- $dest := . | before ":" }}
+  {{- $dest := . | after ":" }}
   - port: "{{ $port }}"
     destination: "{{ $dest }}"
 {{- end }}
