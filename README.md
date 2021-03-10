@@ -46,8 +46,23 @@ $ go build -o rtun-server github.com/snsinfu/reverse-tunnel/server/cmd
 
 Docker images are available:
 
-- https://hub.docker.com/repository/docker/snsinfu/rtun
-- https://hub.docker.com/repository/docker/snsinfu/rtun-server
+- https://hub.docker.com/r/snsinfu/rtun
+- https://hub.docker.com/r/snsinfu/rtun-server
+
+Quick usage:
+
+```console
+$ docker run -it \
+  -p 8080:8080 -p 9000:9000 \
+  -e RTUN_AGENT="8080/tcp @ samplebfeeb1356a458eabef49e7e7" \
+  snsinfu/rtun-server
+
+$ docker run -it --network host \
+  -e RTUN_GATEWAY="ws://0.1.2.3:9000" \
+  -e RTUN_KEY="samplebfeeb1356a458eabef49e7e7" \
+  -e RTUN_FORWARD="8080/tcp:localhost:8080" \
+  snsinfu/rtun
+```
 
 See [docker image readme](docker/README.md).
 
