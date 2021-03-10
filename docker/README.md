@@ -49,25 +49,26 @@ and UDP port 30000 through the rtun-server.
 | `RTUN_FORWARD`       | List of port forwardings         |
 
 ```sh
-docker run -it \
+docker run -it --network host \
   -e RTUN_GATEWAY="ws://0.1.2.3:9000" \
   -e RTUN_KEY="samplebfeeb1356a458eabef49e7e7" \
-  -e RTUN_FORWARD="8080/tcp:192.168.1.10:8080" \
+  -e RTUN_FORWARD="8080/tcp:localhost:8080" \
   snsinfu/rtun
 ```
 
-The `RTUN_GATEWAY` environment variable specifies the WebSocket URL (ws:// or
+The `--network host` option is required to forward to localhost. The
+`RTUN_GATEWAY` environment variable specifies the WebSocket URL (ws:// or
 wss://) of the `rtun-server` to use. The `RTUN_KEY` environment variable
 specifies the authentication key to use. The `RTUN_FORWARD` environment
 variable specifies tunnels as a comma-separated list:
 
 ```sh
-RTUN_FORWARD="8080/tcp:192.168.1.10:8080, 30000/udp:192.168.1.10:30000"
+RTUN_FORWARD="8080/tcp:localhost:8080, 30000/udp:192.168.1.10:30000"
 ```
 
 Each tunnel rule looks like `internet-port/protocol:host:port`. In the above
 example, the first rule specifies that the internet port `8080/tcp` on the
-server should be tunneled to `192.168.1.10:8080`.
+server should be tunneled to `localhost:8080`.
 
 
 ### Docker-compose
