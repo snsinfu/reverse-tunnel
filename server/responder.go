@@ -38,14 +38,22 @@ func WebSocket(c echo.Context, handler func(ws *websocket.Conn) error) error {
 	}
 
 	go func() {
+		var closeMessage []byte
+
 		if err := handler(ws); err != nil {
 			c.Logger().Error(err)
+
+			closeMessage = websocket.FormatCloseMessage(
+				websocket.ClosePolicyViolation, "error: "+err.Error(),
+			)
+		} else {
+			closeMessage = websocket.FormatCloseMessage(
+				websocket.CloseNormalClosure, "",
+			)
 		}
 
 		ws.WriteControl(
-			websocket.CloseMessage,
-			websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""),
-			time.Now().Add(wsCloseTimeout),
+			websocket.CloseMessage, closeMessage, time.Now().Add(wsCloseTimeout),
 		)
 		ws.Close()
 	}()
