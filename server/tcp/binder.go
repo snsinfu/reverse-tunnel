@@ -24,7 +24,20 @@ func (binder Binder) Start(ws *websocket.Conn, store *service.SessionStore) erro
 	}
 	defer ln.Close()
 
+	// Forcifully close connection (thus end session) if the agent does not
+	// respond to ping.
 	go service.Watch(ws, connTimeout, ln.Close)
+
+	go func() {
+		for {
+			// Agent does not send message to this channel in the current
+			// protocol, but it is required to drain the channel to check
+			// for ping responses.
+			if _, _, err := ws.NextReader(); err != nil {
+				break
+			}
+		}
+	}()
 
 	for {
 		conn, err := ln.AcceptTCP()

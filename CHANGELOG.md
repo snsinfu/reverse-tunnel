@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fixed rtun-server to detect lost connection
+
 ## v1.2.3
 
 - Fixed misconfiguration in the agent docker image
