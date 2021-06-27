@@ -1,0 +1,5 @@
+control_address: localhost:9000
+
+agents:
+  - auth_key: test-key
+    ports: [18080/tcp]
