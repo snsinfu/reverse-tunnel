@@ -1,7 +1,7 @@
 echo "Should be able to proxy many concurrent HTTP requests"
 set -e
 
-concurrency=1000
+concurrency=100
 
 echo "* Starting tunneling server..."
 timeout 20s rtun-server -f rtun-server.yml &
