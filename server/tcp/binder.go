@@ -67,5 +67,8 @@ func (binder Binder) Start(ws *websocket.Conn, store *service.SessionStore) erro
 		if err != nil {
 			return err
 		}
+
+		// This mitigates resource exhaustion on a lot of incoming connections.
+		time.Sleep(10*time.Millisecond)
 	}
 }
