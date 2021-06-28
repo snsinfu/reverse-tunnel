@@ -141,5 +141,14 @@ func (agent Agent) tunnel(accept service.BinderAcceptMessage) error {
 	if err := tasks.Wait(); err != nil && err != io.EOF {
 		return err
 	}
+
+	var closeMessage []byte
+	closeMessage = websocket.FormatCloseMessage(
+		websocket.CloseNormalClosure, "",
+	)
+	ws.WriteControl(
+		websocket.CloseMessage, closeMessage, time.Now().Add(5*time.Second),
+	)
+
 	return nil
 }
