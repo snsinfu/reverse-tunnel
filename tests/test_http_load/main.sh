@@ -1,6 +1,8 @@
 echo "Should be able to proxy many concurrent HTTP requests"
 set -e
 
+concurrency=100
+
 echo "* Starting tunneling server..."
 timeout 20s rtun-server -f rtun-server.yml &
 pid_server=$!
@@ -14,13 +16,13 @@ pid_agent=$!
 sleep 1
 
 echo "* Starting an HTTP server..."
-timeout 20s go run server.go 127.0.0.1:8080 &
+timeout 20s go run ./testserver 127.0.0.1:8080 &
 pid_http_server=$!
 
 sleep 1
 
 echo "* Testing concurrent requests..."
-timeout 20s go run client.go 127.0.0.1:18080 100
+timeout 20s go run ./testclient 127.0.0.1:18080 ${concurrency}
 
 echo "* Terminating servers..."
 kill -TERM ${pid_agent}
