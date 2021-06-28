@@ -76,6 +76,10 @@ func (agent Agent) Start() error {
 	for {
 		accept := service.BinderAcceptMessage{}
 		if err := ws.ReadJSON(&accept); err != nil {
+			if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
+				log.Printf("Agent %s closed normally.", agent.service)
+				return nil
+			}
 			return err
 		}
 
