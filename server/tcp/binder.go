@@ -1,6 +1,7 @@
 package tcp
 
 import (
+	"errors"
 	"net"
 	"time"
 
@@ -42,6 +43,10 @@ func (binder Binder) Start(ws *websocket.Conn, store *service.SessionStore) erro
 	for {
 		conn, err := ln.AcceptTCP()
 		if err != nil {
+			var nerr net.Error
+			if errors.As(err, &nerr) && nerr.Temporary() {
+				continue
+			}
 			return err
 		}
 

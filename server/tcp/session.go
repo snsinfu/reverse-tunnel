@@ -1,7 +1,9 @@
 package tcp
 
 import (
+	"errors"
 	"io"
+	"log"
 	"net"
 
 	"github.com/gorilla/websocket"
@@ -62,10 +64,19 @@ func (sess Session) Start(ws *websocket.Conn) error {
 		}
 	})
 
-	if err := tasks.Wait(); err != nil && err != io.EOF {
-		return err
+	err := tasks.Wait()
+
+	if errors.Is(err, io.EOF) {
+		log.Printf("Client %s closed normally. Closing session.", sess.conn.RemoteAddr())
+		return nil
 	}
-	return nil
+
+	if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
+		log.Printf("Session closed normally. Closing client %s.", sess.conn.RemoteAddr())
+		return nil
+	}
+
+	return err
 }
 
 // Close closes client connection.
