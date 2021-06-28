@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"errors"
 	"io"
 	"log"
 	"net"
@@ -15,7 +16,10 @@ import (
 	"github.com/snsinfu/reverse-tunnel/server/service"
 )
 
-const retryInterval = 10 * time.Second
+const (
+	retryInterval  = 10 * time.Second
+	wsCloseTimeout = 3 * time.Second
+)
 
 // dialer is the websocket dialer used to connect to a gateway server.
 var dialer = websocket.DefaultDialer
@@ -65,19 +69,23 @@ func (agent Agent) Start() error {
 	if err != nil {
 		return err
 	}
-	defer ws.Close()
+	defer closeWebsocket(ws)
 
 	log.Printf("Listening on remote port: %s", agent.service)
 
 	for {
 		accept := service.BinderAcceptMessage{}
 		if err := ws.ReadJSON(&accept); err != nil {
+			if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
+				log.Printf("Agent %s closed normally.", agent.service)
+				return nil
+			}
 			return err
 		}
 
 		go func() {
 			if err := agent.tunnel(accept); err != nil {
-				log.Printf("Tunnelling error: %s", err)
+				log.Printf("Tunneling error: %s", err)
 			}
 		}()
 	}
@@ -89,7 +97,6 @@ func (agent Agent) tunnel(accept service.BinderAcceptMessage) error {
 		accept.PeerAddress,
 		agent.destination,
 	)
-	defer log.Printf("Closing connection from %s", accept.PeerAddress)
 
 	conn, err := net.Dial(agent.service.Protocol, agent.destination)
 	if err != nil {
@@ -102,7 +109,7 @@ func (agent Agent) tunnel(accept service.BinderAcceptMessage) error {
 	if err != nil {
 		return err
 	}
-	defer ws.Close()
+	defer closeWebsocket(ws)
 
 	tasks := taskch.New()
 
@@ -138,8 +145,43 @@ func (agent Agent) tunnel(accept service.BinderAcceptMessage) error {
 		}
 	})
 
-	if err := tasks.Wait(); err != nil && err != io.EOF {
-		return err
+	err = tasks.Wait()
+
+	if errors.Is(err, io.EOF) {
+		log.Printf(
+			"Destination closed. Finishing session %s -> %s",
+			accept.PeerAddress,
+			agent.destination,
+		)
+		return nil
 	}
-	return nil
+
+	if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
+		log.Printf(
+			"Tunnel closed. Finishing session %s -> %s",
+			accept.PeerAddress,
+			agent.destination,
+		)
+		return nil
+	}
+
+	log.Printf(
+		"Error %q. Killing session %s -> %s",
+		err,
+		accept.PeerAddress,
+		agent.destination,
+	)
+
+	return err
+}
+
+// closeWebsocket attempts to close a websocket session normally. It is ok to
+// call this function on a connection that has already been closed by the peer.
+func closeWebsocket(ws *websocket.Conn) {
+	ws.WriteControl(
+		websocket.CloseMessage,
+		websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""),
+		time.Now().Add(wsCloseTimeout),
+	)
+	ws.Close()
 }
