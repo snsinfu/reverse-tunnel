@@ -9,8 +9,13 @@ import (
 	"github.com/snsinfu/reverse-tunnel/server/service"
 )
 
-// Timeout value used for checking websocket connection loss.
-const connTimeout = 3 * time.Second
+const (
+	// Timeout value used for checking websocket connection loss.
+	connTimeout = 3 * time.Second
+
+	// Time to wait before retrying a failed Accept().
+	acceptRetryWait = 100 * time.Millisecond
+)
 
 // Binder implements service.Binder for TCP tunneling service.
 type Binder struct {
@@ -45,6 +50,7 @@ func (binder Binder) Start(ws *websocket.Conn, store *service.SessionStore) erro
 		if err != nil {
 			var nerr net.Error
 			if errors.As(err, &nerr) && nerr.Temporary() {
+				time.Sleep(acceptRetryWait)
 				continue
 			}
 			return err
