@@ -81,7 +81,7 @@ func (agent Agent) Start() error {
 
 		go func() {
 			if err := agent.tunnel(accept); err != nil {
-				log.Printf("Tunnelling error: %s", err)
+				log.Printf("Tunneling error: %s", err)
 			}
 		}()
 	}
@@ -93,7 +93,6 @@ func (agent Agent) tunnel(accept service.BinderAcceptMessage) error {
 		accept.PeerAddress,
 		agent.destination,
 	)
-	defer log.Printf("Closing connection from %s", accept.PeerAddress)
 
 	conn, err := net.Dial(agent.service.Protocol, agent.destination)
 	if err != nil {
@@ -161,6 +160,13 @@ func (agent Agent) tunnel(accept service.BinderAcceptMessage) error {
 		)
 		return nil
 	}
+
+	log.Printf(
+		"Error %q. Killing session %s -> %s",
+		err,
+		accept.PeerAddress,
+		agent.destination,
+	)
 
 	return err
 }
