@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.1
+
+- Fixed "websocket error: close 1006 (abnormal closure): unexpected EOF" on
+  tunneling a lot of connections.
+- Improved log messages.
+
 ## v1.3.0
 
 - Fixed rtun-server to detect connection loss. This fix mitigates the annoying
