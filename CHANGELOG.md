@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added basic config checks.
+
 ## v1.3.1
 
 - Fixed "websocket error: close 1006 (abnormal closure): unexpected EOF" on

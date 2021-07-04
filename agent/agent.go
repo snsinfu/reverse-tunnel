@@ -2,6 +2,7 @@ package agent
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -34,6 +35,10 @@ type Agent struct {
 
 // Start starts agents with given configuration.
 func Start(conf config.Agent) error {
+	if err := conf.Check(); err != nil {
+		return fmt.Errorf("config error: %w", err)
+	}
+
 	tasks := taskch.New()
 
 	for _, forw := range conf.Forwards {

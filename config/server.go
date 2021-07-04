@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/snsinfu/reverse-tunnel/ports"
 )
 
@@ -28,4 +30,20 @@ type LetsEncrypt struct {
 type AgentAuth struct {
 	AuthKey string          `yaml:"auth_key"`
 	Ports   []ports.NetPort `yaml:"ports"`
+}
+
+// Check checks agent config for obvious mistakes. Returns a non-nil error if a
+// bad configuration is found.
+func (conf *Server) Check() error {
+	if conf.ControlAddress == "" {
+		return fmt.Errorf("control_address is empty")
+	}
+
+	for _, agent := range conf.Agents {
+		if agent.AuthKey == "" {
+			return fmt.Errorf("auth_key is unconfigured")
+		}
+	}
+
+	return nil
 }

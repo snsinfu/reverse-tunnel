@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/snsinfu/reverse-tunnel/config"
@@ -9,6 +11,10 @@ import (
 
 // Start starts tunneling server with given configuration.
 func Start(conf config.Server) error {
+	if err := conf.Check(); err != nil {
+		return fmt.Errorf("config error: %w", err)
+	}
+
 	e := echo.New()
 	e.HideBanner = true
 

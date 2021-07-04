@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/snsinfu/reverse-tunnel/ports"
 )
 
@@ -20,4 +22,28 @@ type Agent struct {
 type Forward struct {
 	Port        ports.NetPort `yaml:"port"`
 	Destination string        `yaml:"destination"`
+}
+
+// Check checks agent config for obvious mistakes. Returns a non-nil error if a
+// bad configuration is found.
+func (conf *Agent) Check() error {
+	if conf.GatewayURL == "" {
+		return fmt.Errorf("gateway_url is empty")
+	}
+
+	if conf.AuthKey == "" {
+		return fmt.Errorf("auth_key is empty")
+	}
+
+	for _, forw := range conf.Forwards {
+		if forw.Port.Protocol == "" || forw.Port.Port == 0 {
+			return fmt.Errorf("port is unconfigured")
+		}
+
+		if forw.Destination == "" {
+			return fmt.Errorf("port %s destination is empty", forw.Port)
+		}
+	}
+
+	return nil
 }
