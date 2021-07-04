@@ -15,9 +15,6 @@ const (
 
 	// Time to wait before retrying a failed Accept().
 	acceptRetryWait = 100 * time.Millisecond
-
-	// Time to wait before accepting a new connection.
-	acceptThrottlingWait = time.Millisecond
 )
 
 // Binder implements service.Binder for TCP tunneling service.
@@ -70,9 +67,5 @@ func (binder Binder) Start(ws *websocket.Conn, store *service.SessionStore) erro
 		if err != nil {
 			return err
 		}
-
-		// Accepting a lot of concurrent connections exhausts resources,
-		// resulting in TCP resets and packet loss.
-		time.Sleep(acceptThrottlingWait)
 	}
 }
