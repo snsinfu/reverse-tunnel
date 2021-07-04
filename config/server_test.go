@@ -18,7 +18,7 @@ func TestServer_Check_BadConfig(t *testing.T) {
 			ControlAddress: ":9000",
 			Agents: []AgentAuth{
 				{
-					Ports: []ports.NetPort{{"tcp", 8080}},
+					Ports: []ports.NetPort{{Protocol: "tcp", Port: 8080}},
 				},
 			},
 		},

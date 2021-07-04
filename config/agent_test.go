@@ -35,7 +35,7 @@ func TestAgent_Check_BadConfig(t *testing.T) {
 			AuthKey:    "key",
 			Forwards: []Forward{
 				{
-					Port: ports.NetPort{"tcp", 10000},
+					Port: ports.NetPort{Protocol: "tcp", Port: 10000},
 				},
 			},
 		},
