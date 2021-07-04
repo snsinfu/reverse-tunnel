@@ -3,6 +3,11 @@ set -e
 
 concurrency=100
 
+# Raise limit so that connections won't be killed by kernel. net.core.somaxconn
+# (or kern.ipc.somaxconn on BSDs and mac) should also be raised if you test for
+# a very high number of concurrent access.
+ulimit -n $((128 + concurrency * 5))
+
 echo "* Starting tunneling server..."
 timeout 20s rtun-server -f rtun-server.yml &
 pid_server=$!
