@@ -2,6 +2,7 @@ package udp
 
 import (
 	"errors"
+	"fmt"
 	"net"
 	"strconv"
 
@@ -13,9 +14,9 @@ import (
 // ErrUnauthorizedKey is returned when a key is not authorized.
 var ErrUnauthorizedKey = errors.New("unauthorized key")
 
-// ErrInsufficientScope is returned when a key is not allowed to bind to a
+// ErrUnauthorizedPort is returned when a key is not allowed to bind to a
 // requested port.
-var ErrInsufficientScope = errors.New("insufficient scope")
+var ErrUnauthorizedPort = errors.New("unauthorized port")
 
 // Service implements service.Service for UDP tunneling service.
 type Service struct {
@@ -46,11 +47,11 @@ func NewService(conf config.Server) Service {
 func (serv Service) GetBinder(key string, port int) (service.Binder, error) {
 	set, ok := serv.authorities[key]
 	if !ok {
-		return nil, ErrUnauthorizedKey
+		return nil, fmt.Errorf("%w: %s", ErrUnauthorizedKey, key)
 	}
 
 	if !set.Has(port) {
-		return nil, ErrInsufficientScope
+		return nil, fmt.Errorf("%w: %d/udp (key: %s)", ErrUnauthorizedPort, port, key)
 	}
 
 	addr, err := net.ResolveUDPAddr("udp", ":"+strconv.Itoa(port))
