@@ -1,8 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"errors"
+	"log"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/docopt/docopt-go"
 	"github.com/snsinfu/reverse-tunnel/agent"
@@ -20,7 +24,10 @@ Options:
   -f <config>  Specify agent configuration file.
 `
 
-const defaultConfigPath = "rtun.yml"
+const (
+	defaultConfigPath = "rtun.yml"
+	cancelWait        = 3 * time.Second
+)
 
 func main() {
 	options, err := docopt.ParseDoc(usage)
@@ -29,7 +36,7 @@ func main() {
 	}
 
 	if err := run(options); err != nil {
-		fmt.Fprintln(os.Stderr, "error:", err)
+		log.Printf("error: %s", err)
 		os.Exit(1)
 	}
 }
@@ -47,5 +54,26 @@ func run(options docopt.Opts) error {
 		}
 	}
 
-	return agent.Start(conf)
+	ctx := withSignalCancel(context.Background())
+	err := agent.Start(conf, ctx)
+
+	if errors.Is(err, context.Canceled) {
+		log.Print("waiting for agents to stop...")
+		time.Sleep(cancelWait)
+		return nil
+	}
+
+	return err
+}
+
+func withSignalCancel(ctx context.Context) context.Context {
+	newCtx, cancel := context.WithCancel(ctx)
+
+	sigCh := make(chan os.Signal)
+	signal.Notify(sigCh, os.Interrupt)
+	go func() {
+		<-sigCh
+		cancel()
+	}()
+	return newCtx
 }

@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Added basic config checks.
+- Fixed agent to gracefully close tunnels on interrupt. This should fix
+  dangling connections on server upon stopping agent.
 
 ## v1.3.1
 
