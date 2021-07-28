@@ -3,7 +3,9 @@ WORKDIR /srv
 COPY . .
 ARG GOARCH=
 ARG CGO_ENABLED=0
-RUN go build github.com/snsinfu/reconf
+RUN git clone https://github.com/snsinfu/reconf.git /tmp/reconf \
+ && cd /tmp/reconf \
+ && go build -o /srv/reconf .
 RUN go build -o rtun ./agent/cmd
 
 FROM scratch
