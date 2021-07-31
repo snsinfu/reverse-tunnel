@@ -1,10 +1,9 @@
 # Changelog
 
-## Unreleased
+## v1.3.2
 
 - Added basic config checks.
-- Fixed agent to gracefully close tunnels on interrupt. This should fix
-  dangling connections on server upon stopping agent.
+- Fixed dangling connections on server upon stopping agent by interrupt.
 
 ## v1.3.1
 
