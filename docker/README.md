@@ -73,8 +73,9 @@ server should be tunneled to `localhost:8080`.
 
 ### Docker-compose
 
-The following docker-compose example exposes local `nginx` service to the
-internet through `rtun-server` running on a public server 0.1.2.3.
+The following docker-compose example exposes local `nginx` as `http://0.1.2.3:8080`
+by tunneling http connections through `rtun-server` running on a public server
+0.1.2.3 on port 9000.
 
 ```yaml
 version: "3.8"
@@ -88,6 +89,5 @@ services:
     environment:
       RTUN_GATEWAY: ws://0.1.2.3:9000
       RTUN_KEY: samplebfeeb1356a458eabef49e7e7
-      RTUN_FORWARD: >
-        8080/tcp:web:80
+      RTUN_FORWARD: 8080/tcp:web:80
 ```
