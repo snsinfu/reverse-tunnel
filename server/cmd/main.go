@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/docopt/docopt-go"
-	"github.com/snsinfu/reverse-tunnel/config"
 	"github.com/snsinfu/reverse-tunnel/server"
 )
 
@@ -35,17 +34,8 @@ func main() {
 }
 
 func run(options docopt.Opts) error {
-	conf := config.ServerDefault
-
 	if path, err := options.String("-f"); err == nil {
-		if err := config.Load(path, &conf); err != nil {
-			return err
-		}
-	} else {
-		if err := config.Load(defaultConfigPath, &conf); err != nil && !os.IsNotExist(err) {
-			return err
-		}
+        return server.Start(path, true)
 	}
-
-	return server.Start(conf)
+    return server.Start(defaultConfigPath, false)
 }

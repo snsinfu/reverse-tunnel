@@ -2,6 +2,9 @@ package server
 
 import (
 	"fmt"
+    "os"
+    "os/signal"
+    "syscall"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -10,10 +13,12 @@ import (
 )
 
 // Start starts tunneling server with given configuration.
-func Start(conf config.Server) error {
-	if err := conf.Check(); err != nil {
-		return fmt.Errorf("config error: %w", err)
-	}
+func Start(path string, required bool) error {
+
+    conf, err := load(path, required)
+    if err != nil {
+        return err
+    }
 
 	e := echo.New()
 	e.HideBanner = true
@@ -32,6 +37,25 @@ func Start(conf config.Server) error {
 	e.Use(middleware.Recover())
 
 	action := NewAction(conf)
+
+    sigs := make(chan os.Signal, 1)
+    signal.Notify(sigs, syscall.SIGHUP)
+    go func() {
+        for true {
+            <-sigs
+            fmt.Println("Reloading config")
+            conf, err := load(path, required)
+            if err != nil {
+                fmt.Println(err)
+                os.Exit(1)
+            }
+            fmt.Println(conf)
+            fmt.Println("Reloading action")
+            action.Update(conf)
+            fmt.Println("Reloaded action")
+        }
+    }()
+
 	e.GET("/tcp/:port", action.GetTCPPort)
 	e.GET("/udp/:port", action.GetUDPPort)
 	e.GET("/session/:id", action.GetSession)
@@ -40,4 +64,16 @@ func Start(conf config.Server) error {
 		return e.StartAutoTLS(conf.ControlAddress)
 	}
 	return e.Start(conf.ControlAddress)
+}
+
+func load(path string, required bool) (config.Server, error) {
+	conf := config.ServerDefault
+    err := config.Load(path, &conf)
+    if required && err != nil {
+        return conf, err
+    }
+	if err := conf.Check(); err != nil {
+		return conf, fmt.Errorf("config error: %w", err)
+	}
+    return conf, nil
 }
