@@ -42,6 +42,11 @@ func NewAction(conf config.Server) Action {
 	}
 }
 
+func (action *Action) Update(conf config.Server) {
+    action.tcp = tcp.NewService(conf)
+    action.udp = udp.NewService(conf)
+}
+
 // GetTCPPort handles GET /tcp/:port request, backed by tcp.Binder.
 func (action *Action) GetTCPPort(c echo.Context) error {
 	return action.GetServicePort(c, &action.tcp)
