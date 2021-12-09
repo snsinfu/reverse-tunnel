@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/snsinfu/reverse-tunnel/server/service"
+	"github.com/snsinfu/reverse-tunnel/ports"
 )
 
 const (
@@ -20,6 +21,8 @@ const (
 // Binder implements service.Binder for TCP tunneling service.
 type Binder struct {
 	addr *net.TCPAddr
+    port ports.NetPort
+    key  string
 }
 
 // Start binds to a TCP port and creates tcp.Session for each client connection.
@@ -56,7 +59,7 @@ func (binder Binder) Start(ws *websocket.Conn, store *service.SessionStore) erro
 			return err
 		}
 
-		sess := NewSession(conn)
+		sess := NewSession(conn, binder.port, binder.key)
 		id := store.Add(sess)
 
 		err = ws.WriteJSON(service.BinderAcceptMessage{
