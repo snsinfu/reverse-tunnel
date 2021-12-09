@@ -10,6 +10,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/snsinfu/reverse-tunnel/config"
+	"github.com/snsinfu/reverse-tunnel/ports"
 )
 
 // sessionTimeout is the timeout used to kill idle UDP session.
@@ -25,13 +26,17 @@ type Session struct {
 	conn   *net.UDPConn
 	peer   *net.UDPAddr
 	idle   int32
+    port   ports.NetPort
+    key    string
 }
 
 // NewSession creates a Session for tunneling UDP packets from/to given peer.
-func NewSession(conn *net.UDPConn, peer *net.UDPAddr) *Session {
+func NewSession(conn *net.UDPConn, peer *net.UDPAddr, port ports.NetPort, key string) *Session {
 	return &Session{
 		conn: conn,
 		peer: peer,
+        port: port,
+        key: key,
 	}
 }
 
@@ -106,4 +111,12 @@ func (sess *Session) Start(ws *websocket.Conn) error {
 // Close does nothing because UDP has no real connection.
 func (sess Session) Close() error {
 	return nil
+}
+
+func (sess Session) GetPort() ports.NetPort {
+	return sess.port
+}
+
+func (sess Session) GetKey() string {
+	return sess.key
 }

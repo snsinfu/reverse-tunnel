@@ -47,3 +47,24 @@ func (conf *Server) Check() error {
 
 	return nil
 }
+
+func (conf *Server) Has(port ports.NetPort, authKey string) bool {
+    for _, agt := range conf.Agents {
+        if agt.has(port, authKey) {
+            return true
+        }
+    }
+    return false
+}
+
+func (agentAuth AgentAuth) has(port ports.NetPort, authKey string) bool {
+    if authKey != agentAuth.AuthKey {
+        return false
+    }
+    for _, agtPort := range agentAuth.Ports {
+        if agtPort == port {
+            return true
+        }
+    }
+    return false
+}

@@ -1,10 +1,12 @@
 package service
 
 import (
+	"fmt"
 	"net"
 	"sync"
 
 	"github.com/snsinfu/reverse-tunnel/hexid"
+	"github.com/snsinfu/reverse-tunnel/ports"
 )
 
 // sessionIDSize is the number of random bytes encoded in a session ID.
@@ -72,7 +74,19 @@ func (store *SessionStore) Remove(sess Session) {
 	store.Lock()
 	defer store.Unlock()
 
-	delete(store.sessions, encodeAddr(sess.PeerAddr()))
+    addr := encodeAddr(sess.PeerAddr())
+    if compare, ok := store.sessions[addr]; ok && compare == sess {
+        delete(store.sessions, addr)
+    }
+}
+
+func (store *SessionStore) Close(port ports.NetPort, key string) {
+    for _, sess := range store.sessions {
+        fmt.Println(sess)
+        if sess.GetPort() == port && sess.GetKey() == key {
+            sess.Close()
+        }
+    }
 }
 
 // encodeAddr encodes network address as a string.

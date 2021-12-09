@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"github.com/gorilla/websocket"
+	"github.com/snsinfu/reverse-tunnel/ports"
 )
 
 // Session is an abstraction of a tunneling session.
@@ -17,4 +18,8 @@ type Session interface {
 
 	// Close closes client connection. This cancels tunneling session.
 	Close() error
+
+    GetPort() ports.NetPort
+
+    GetKey() string
 }

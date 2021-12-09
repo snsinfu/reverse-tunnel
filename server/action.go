@@ -29,6 +29,7 @@ var ErrInvalidSessionID = errors.New("invalid session ID")
 
 // Action takes HTTP requests and serves tunneling service.
 type Action struct {
+    conf  config.Server
 	tcp   tcp.Service
 	udp   udp.Service
 	store service.SessionStore
@@ -37,12 +38,20 @@ type Action struct {
 // NewAction creates a new Action with given server configuration.
 func NewAction(conf config.Server) Action {
 	return Action{
-		tcp: tcp.NewService(conf),
-		udp: udp.NewService(conf),
+        conf: conf,
+		tcp:  tcp.NewService(conf),
+		udp:  udp.NewService(conf),
 	}
 }
 
 func (action *Action) Update(conf config.Server) {
+    for _, oldAgt := range action.conf.Agents {
+        for _, oldPort := range oldAgt.Ports {
+            if !conf.Has(oldPort, oldAgt.AuthKey) {
+                action.store.Close(oldPort, oldAgt.AuthKey)
+            }
+        }
+    }
     action.tcp = tcp.NewService(conf)
     action.udp = udp.NewService(conf)
 }

@@ -49,10 +49,7 @@ func Start(path string, required bool) error {
                 fmt.Println(err)
                 os.Exit(1)
             }
-            fmt.Println(conf)
-            fmt.Println("Reloading action")
             action.Update(conf)
-            fmt.Println("Reloaded action")
         }
     }()
 

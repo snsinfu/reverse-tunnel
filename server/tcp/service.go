@@ -59,5 +59,5 @@ func (serv Service) GetBinder(key string, port int) (service.Binder, error) {
 		return nil, err
 	}
 
-	return &Binder{addr: addr}, nil
+    return &Binder{addr: addr, port: ports.NetPort{"tcp", port}, key: key}, nil
 }
