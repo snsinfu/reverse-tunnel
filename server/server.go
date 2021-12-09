@@ -43,7 +43,7 @@ func Start(path string, required bool) error {
     go func() {
         for true {
             <-sigs
-            fmt.Println("Reloading config")
+            fmt.Println("Reloading config " + path)
             conf, err := load(path, required)
             if err != nil {
                 fmt.Println(err)
