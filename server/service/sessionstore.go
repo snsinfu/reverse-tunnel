@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"net"
 	"sync"
 
@@ -82,7 +81,6 @@ func (store *SessionStore) Remove(sess Session) {
 
 func (store *SessionStore) Close(port ports.NetPort, key string) {
     for _, sess := range store.sessions {
-        fmt.Println(sess)
         if sess.GetPort() == port && sess.GetKey() == key {
             sess.Close()
         }

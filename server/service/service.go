@@ -9,7 +9,7 @@ type Service interface {
 	GetBinder(key string, port int) (Binder, error)
 }
 
-// Binder creates tunnleing session for each client connection.
+// Binder creates tunneling session for each client connection.
 type Binder interface {
 	Start(ws *websocket.Conn, store *SessionStore) error
 }
