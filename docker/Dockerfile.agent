@@ -11,6 +11,7 @@ RUN go build -o rtun ./agent/cmd
 FROM scratch
 COPY --from=builder /srv/reconf /srv/rtun /
 COPY --from=builder /srv/docker/rtun.yml.template /config/
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENV RTUN_GATEWAY=
 ENV RTUN_KEY=
 ENV RTUN_FORWARD=
