@@ -11,7 +11,8 @@ agents:
     {{- end }}
 {{- end }}
 
-{{ if index .env "RTUN_TLS" -}}
-lets_encrypt:
-  domain: "{{ .env.RTUN_TLS }}"
+{{ if index .env "RTUN_TLS_CERT" -}}
+tls:
+  cert_path: "{{ .env.RTUN_TLS_CERT }}"
+  key_path: "{{ .env.RTUN_TLS_KEY }}"
 {{ end -}}

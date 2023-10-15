@@ -11,7 +11,8 @@
 |----------------------|----------------------------------------------|
 | `RTUN_AGENT`         | List of agents (allowed ports and auth keys) |
 | `RTUN_PORT`          | The port the server binds to (default: 9000) |
-| `RTUN_TLS`           | Let's Encrypt domain (optional)              |
+| `RTUN_TLS_CERT`      | TLS cert path (optional)                     |
+| `RTUN_TLS_KEY`       | TLS key path (optional)                      |
 
 ```sh
 docker run -it \

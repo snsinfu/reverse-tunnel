@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.4.0
+
+- Replace Let's Encrypt by simple TLS certificates via `RTUN_TLS_CERT`, `RTUN_TLS_KEY`
+- Added TLS dependencies in the container
+
 ## v1.3.2
 
 - Added basic config checks.

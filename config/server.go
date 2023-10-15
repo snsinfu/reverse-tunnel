@@ -9,20 +9,20 @@ import (
 // ServerDefault is a default server configuration.
 var ServerDefault = Server{
 	ControlAddress: "localhost:9000",
-	LetsEncrypt:    LetsEncrypt{CacheDir: ".autocert_cache"},
+	TLSConf:        TLSConf{},
 }
 
 // Server represents a configuration of a reverse tunnel server program.
 type Server struct {
 	ControlAddress string      `yaml:"control_address"`
-	LetsEncrypt    LetsEncrypt `yaml:"lets_encrypt"`
+	TLSConf        TLSConf     `yaml:"tls"`
 	Agents         []AgentAuth `yaml:"agents"`
 }
 
-// LetsEncrypt represents autocert configuration for the server.
-type LetsEncrypt struct {
-	Domain   string `yaml:"domain"`
-	CacheDir string `yaml:"cache_dir"`
+// TLSConf represents TLS configuration for the server.
+type TLSConf struct {
+	CertPath string `yaml:"cert_path"`
+	KeyPath  string `yaml:"key_path"`
 }
 
 // AgentAuth represents an agent and its access rights authorized in a reverse
